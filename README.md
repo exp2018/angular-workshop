@@ -10,7 +10,7 @@
 - Contacts book app based on modules [modules](TypeScript/modules)
 
 
-## Angular 2.0
+## @Angular
 
 1. Hello world (with pure JavaScript)
 
