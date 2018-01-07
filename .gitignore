@@ -40,3 +40,4 @@ TypeScript/monolith/js/app\.js
 /**/node_modules/
 /**/\.vscode/
 /**/dist/
+/**/experiments/
