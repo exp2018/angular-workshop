@@ -40,6 +40,8 @@ TypeScript/monolith/js/app\.js
 /**/node_modules/
 /**/\.vscode/
 /**/dist/
+/**/_test-output/
 /**/experiments/
 Testing/karma/coverage/
+Testing/protractor/coverage/
 /**/npm-debug.log

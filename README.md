@@ -69,9 +69,13 @@
     Examples: [test-pack](Testing/test-pack)	
 
 
-1. Karma - The Spectacular Test Runner for Javascript
+1. Karma - The Spectacular Test Runner for Javascript/Typescript
 
     Examples: [karma](Testing/karma)
+
+1. Protractor - end to end testing for @Angular
+
+    Examples: [protractor](Testing/protractor)
 
 
 ## Useful link
