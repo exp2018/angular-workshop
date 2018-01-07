@@ -64,7 +64,11 @@
     
     Examples: [di-with-mock](Testing/di-with-mock)
 
+1. Different testing scenarios example
 
+    Examples: [test-pack](Testing/test-pack)	
+
+	
 ## Useful link
 |Ttile|Link|
 |---|---|
