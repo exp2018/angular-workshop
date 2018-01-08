@@ -1,49 +1,64 @@
 (function(exports) {
-    let CONTACTS = [
-        { id: "1", firstName: "Max", lastName: "Smith", email: "max@gmail.com" },
-        { id: "2", firstName: "Chris", lastName: "Raches", email: "chris@gmail.com" },
-        { id: "3", firstName: "Michael", lastName: "Alloy", email: "michael@gmail.com" },
-        { id: "4", firstName: "John", lastName: "Doe", email: "john@gmail.com" },
-        { id: "5", firstName: "Jenny", lastName: "Doe", email: "jenny@gmail.com" }
+    let CONTACTS: Contacts = [
+        { id: 1, firstName: "Max", lastName: "Smith", email: "max@gmail.com" },
+        { id: 2, firstName: "Chris", lastName: "Raches", email: "chris@gmail.com" },
+        { id: 3, firstName: "Michael", lastName: "Alloy", email: "michael@gmail.com" },
+        { id: 4, firstName: "John", lastName: "Doe", email: "john@gmail.com" },
+        { id: 5, firstName: "Jenny", lastName: "Doe", email: "jenny@gmail.com" }
     ];
+
+    interface Contact {
+        id: number
+        firstName: string
+        lastName: string
+        email: string
+    }
+
+    type Contacts = Contact[]
+
+    enum EditMode {
+        EDIT,
+        VIEW,
+        ADD
+    }
 
 	class ContactsService {
         static _contactId = 5;
 
-        private contacts
+        private contacts: Contacts
 
-        constructor(contacts) {
+        constructor(contacts: Contacts) {
             this.contacts = [...CONTACTS]
         }
 
-		getAll() {
+		getAll(): Contacts {
 			return this.contacts;
 		}
 		
-		getById(id) {
+		getById(id: number): Contact {
 			return this.findById(id);
 		}
 		
-		remove(id) {
+		remove(id: number): void {
 			let ind = this.findIndexById(id);
 			if( ind>=0 )
                 this.contacts.splice(ind,1);
 		}
 		
-		private findById(contactId) {
+		private findById(contactId: number): Contact {
 			return this.contacts.find(function(row){
 				return row.id == contactId;
 			})
 		}
 		
-		private findIndexById(contactId) {
+		private findIndexById(contactId: number): number {
 			let contact = this.findById(contactId);
 			if( !contact ) return -1;
 			
 			return this.contacts.indexOf(contact);
 		}
 		
-		update(contact) {
+		update(contact: Contact): number {
 			let ind = this.findIndexById(contact.id);
 			if( ind<0 ) return null;
 			
@@ -52,7 +67,7 @@
 			return contact.id;
 		}
 		
-		add(contact) {
+		add(contact: Contact): number {
 			contact.id = ++ContactsService._contactId;
 			
 			this.contacts.push( contact );
@@ -61,10 +76,13 @@
 		}
 	}
 	
-	function Controller(contactsService) {
-		this.contactsService = contactsService;
+	class Controller {
+        private selectedId: number = -1
+        private editMode: EditMode
+
+		constructor(private contactsService: ContactsService) {};
 		
-		this.drawContactsList = function() {
+		drawContactsList(): void {
 			let contacts = this.contactsService.getAll();
 			
 			let html = '<ul>'
@@ -82,7 +100,7 @@
 			contactsListContainer.innerHTML = html;
 		}
 		
-		this.select = function(event, contactId) {
+		select(event: Event, contactId: number): boolean {
 			this.selectedId = contactId;
 			 
 			this.drawContactsList();
@@ -92,7 +110,7 @@
 			return false;
 		}
 		
-		this.drawViewDetails = function(contactId) {
+		drawViewDetails(contactId: number): void {
 			let contactsDetailsContainer = document.getElementById('contactsDetailsContainer');
 			let contact = this.contactsService.getById(contactId);
 			contactsDetailsContainer.innerHTML = 
@@ -102,12 +120,12 @@
 				'<label></label><a href="#" class="text-danger" onclick="ctrl.edit(event,' + contact.id + ')"><span class="glyphicon glyphicon-edit"></span>Edit</a><br/>';
 		}
 		
-		this.clearDetails = function() {
+		clearDetails(): void {
 			let contactsDetailsContainer = document.getElementById('contactsDetailsContainer');
 			contactsDetailsContainer.innerHTML = '';
 		}
 		
-		this.remove = function(event, clientId) {
+		remove(event: Event, clientId: number): boolean {
 			if( this.selectedId==clientId )
 				this.clearDetails();
 				
@@ -118,8 +136,8 @@
 			return false;
 		}
 		
-		this.add = function(event) {
-			this.editMode = 'add';
+		add(event: Event): boolean {
+			this.editMode = EditMode.ADD;
 			
 			this.selectedId = null;
 			
@@ -130,8 +148,8 @@
 			return false;
 		}
 		
-		this.edit = function(event, clientId) {
-			this.editMode = 'edit';
+		edit(event: Event, clientId: number): boolean {
+			this.editMode = EditMode.EDIT;
 			
 			this.drawEditDetails(clientId);
 			
@@ -139,7 +157,7 @@
 			return false;
 		}
 		
-		this.drawEditDetails = function(contactId) {
+		drawEditDetails(contactId: number): void {
 			
 			let contact = !contactId ? {id:'', firstName:'', lastName:'', email:''} : this.contactsService.getById(contactId);
 			
@@ -159,8 +177,8 @@
 			firstNameInput.select();
 		}
 		
-		this.cancelEdit = function(event) {
-			if( this.editMode == 'edit') 
+		cancelEdit(event: Event): boolean {
+			if( this.editMode == EditMode.EDIT) 
 				this.drawViewDetails( this.selectedId );
 			else
 				this.clearDetails();
@@ -169,7 +187,7 @@
 			return false;
 		}
 		
-		this.submit = function(event) {
+		submit(event: Event): boolean {
 			event.preventDefault();
 			
 			let fomValid = this.validate();
@@ -180,7 +198,7 @@
 			return false;
 		}
 		
-		this.validate = function() {
+		validate(): boolean {
 			let res = false;
 			let form = document.editContactForm;
 			
@@ -196,7 +214,7 @@
 			return res;
 		}
 		
-		this.save = function() {
+		save() {
 			let form = document.editContactForm;
 			
 			let client = {
@@ -207,7 +225,7 @@
 				}
 			
 			let contactId;
-			if( this.editMode == 'add' )
+			if( this.editMode == EditMode.ADD )
 				contactId = this.contactsService.add(client);
 			else
 				contactId = this.contactsService.update(client);
@@ -222,7 +240,7 @@
 		let contactsService = new ContactsService(CONTACTS);
 		let controller = new Controller(contactsService);
 		
-		exports.ctrl = controller
+		exports['ctrl'] = controller
 		
 		controller.drawContactsList()
 	}
