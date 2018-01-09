@@ -1,4 +1,4 @@
-enum EditMode {
+const enum EditMode {
     EDIT,
     VIEW,
     ADD
