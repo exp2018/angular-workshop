@@ -13,11 +13,13 @@ const CONTACTS: Contact[] = [
     selector: 'my-app',
     template: `
         <ul>
-                <li *ngFor="let contact of contacts" class='item'> 
+                <li *ngFor="let contact of contacts" class='item' [class.active]="selected==contact"> 
                     <a href='#' (click)='select(contact)'>{{contact.firstName}} {{contact.lastName.toUpperCase()}}</a>
                     <a href='#' onclick='ctrl.remove(event, 1)' class='remove' title='Remove'><span class='glyphicon glyphicon-remove-sign'></span></a>
                 </li>
         </ul>
+        <div id="contactsDetailsContainer">
+        </div>
         <pre>{{selected | json}}</pre>
     `
 })
