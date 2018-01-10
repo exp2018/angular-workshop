@@ -13,7 +13,10 @@ export class ContactsService {
 		];
 		
 	getAll() {
-		return this.CONTACTS;
+		return Promise.resolve(this.CONTACTS)
+			.then(
+				(contacts) => contacts.map ( (val) => { val.id *= 100; return val } )
+			);
 	}
 	
 	getById(id: number) {

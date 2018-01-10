@@ -24,7 +24,12 @@ export class ContactListComponent implements OnInit {
     constructor(private contactService: ContactsService) {}
 
     ngOnInit() {
-        this.contacts = this.contactService.getAll()
+        this
+            .contactService
+            .getAll()
+            .then( (contacts) => { 
+                this.contacts = contacts
+            } )
     }
 
     select(contact: Contact) {
