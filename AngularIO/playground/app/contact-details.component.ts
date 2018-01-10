@@ -1,6 +1,6 @@
 import { ContactsService } from './contact.service';
-import { Component, Input } from '@angular/core'
-import { NgForm } from '@angular/forms';
+import { Component, Input, EventEmitter, Output } from '@angular/core'
+import { NgForm } from '@angular/forms'
 
 @Component({
     selector: 'contact-details',
@@ -29,11 +29,16 @@ export class ContactDetailsComponent {
     @Input()
     contact: Contact
 
+    @Output()
+    oncontact = new EventEmitter<Contact>()
+
     constructor(private contactService: ContactsService) {}
 
     submit(form: NgForm) {
         this.contact = form.value
         this.contactService.update(this.contact)
         this.editMode = false
+
+        this.oncontact.emit(this.contact);
     }
 }

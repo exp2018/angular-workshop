@@ -1,5 +1,5 @@
 import { ContactsService } from './contact.service';
-import { Component, OnInit, EventEmitter, Output } from '@angular/core'
+import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core'
 
 @Component({
     selector: 'contact-list',
@@ -14,7 +14,10 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core'
 })
 export class ContactListComponent implements OnInit {
     contacts: Contacts
+
+    @Input()
     selected: Contact
+    
     @Output()
     onselected: EventEmitter<Contact> = new EventEmitter<Contact>()
 
