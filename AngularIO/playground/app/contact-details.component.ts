@@ -32,7 +32,8 @@ export class ContactDetailsComponent {
     constructor(private contactService: ContactsService) {}
 
     submit(form: NgForm) {
-        console.log(form.value)
-        alert('Submitted');
+        this.contact = form.value
+        this.contactService.update(this.contact)
+        this.editMode = false
     }
 }
