@@ -21,15 +21,16 @@ export class ContactListComponent implements OnInit {
     @Output()
     selectedChange: EventEmitter<Contact> = new EventEmitter<Contact>()
 
-    constructor(private contactService: ContactsService) {}
+    constructor( private contactService: ContactsService ) {}
 
     ngOnInit() {
         this
             .contactService
             .getAll()
-            .then( (contacts) => { 
-                this.contacts = contacts
-            } )
+            .subscribe(
+                data => this.contacts = data,
+                error =>  alert( error )
+            )
     }
 
     select(contact: Contact) {

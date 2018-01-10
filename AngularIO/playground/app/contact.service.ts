@@ -1,22 +1,29 @@
-import {Injectable} from "@angular/core"
+import { Injectable } from "@angular/core"
+import { Http, Response } from "@angular/http"
+import { Observable } from 'rxjs/Observable'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/catch'
+import 'rxjs/add/observable/throw'
 
 @Injectable()
 export class ContactsService {
-	static _contactId = 1;
-	
-	CONTACTS: Contact[] = [
-			{ id: ContactsService._contactId++, firstName: "Max", lastName: "Smith", email: "max@gmail.com" },
-			{ id: ContactsService._contactId++, firstName: "Chris", lastName: "Raches", email: "chris@gmail.com" },
-			{ id: ContactsService._contactId++, firstName: "Michael", lastName: "Alloy", email: "michael@gmail.com" },
-			{ id: ContactsService._contactId++, firstName: "John", lastName: "Doe", email: "john@gmail.com" },
-			{ id: ContactsService._contactId++, firstName: "Jenny", lastName: "Doe", email: "jenny@gmail.com" }
-		];
+	static _contactId = 10;
 		
+	constructor(private http: Http) {}
+
 	getAll() {
-		return Promise.resolve(this.CONTACTS)
-			.then(
-				(contacts) => contacts.map ( (val) => { val.id *= 100; return val } )
-			);
+		return this
+			.http
+			.get('contacts.json')
+			.map((res: Response) => {
+				let data: Contacts = this.extractData(res) as Contacts
+				 
+				data.map((val) => { ContactsService._contactId = Math.max(val.id, ContactsService._contactId) })
+				ContactsService._contactId++;
+				 
+				return data;
+			})
+			.catch(this.handleError)
 	}
 	
 	getById(id: number) {
@@ -55,5 +62,20 @@ export class ContactsService {
 		if( !contact ) return -1;
 		
 		return this.CONTACTS.indexOf(contact);
+	}
+
+	private extractData(res: Response): Object {
+		if (res.status < 200 || res.status >= 300) {
+			throw new Error('Bad response status: ' + res.status);
+		}
+		let body = res.json();
+		return body || { };
+	}
+	
+	private handleError (error: any) {
+		// In a real world app, we might send the error to remote logging infrastructure
+		let errMsg = error.message || error.status + ' ' + error.statusText + ': ' + error.url || 'Server error';
+		console.error(errMsg); // log to console instead
+		return Observable.throw(errMsg);
 	}
 }
