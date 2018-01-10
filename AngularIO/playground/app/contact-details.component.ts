@@ -14,11 +14,12 @@ import { NgForm } from '@angular/forms'
             </span>
             <form *ngIf="editMode" name="editContactForm" #form="ngForm" (ngSubmit)="submit(form)">
 					<input name="id" type="hidden" [ngModel]="contact.id">
-					<label>First Name: </label><input name="firstName" [ngModel]="contact.firstName"><br/>
-					<label>Last Name: </label><input name="lastName" [ngModel]="contact.lastName"><br/>
+                    <label>First Name: </label>
+                    <input #inp required name="firstName" [ngModel]="contact.firstName"><br/>
+					<label>Last Name: </label><input name="lastName" [ngModel]="contact.lastName" required><br/>
 					<label>email: </label><input name="email" [ngModel]="contact.email"><br/>
 					<label></label><input type="submit" class="btn btn-danger" [value]="( !contact.id ? 'Add' : 'Save' )"/>
-					<a href="#" class="text-danger" onclick="ctrl.cancelEdit(event)">Cancel</a>
+                    <a href="#" class="text-danger" onclick="ctrl.cancelEdit(event)">Cancel</a>
 			</form>
         </div>
     `
@@ -30,15 +31,17 @@ export class ContactDetailsComponent {
     contact: Contact
 
     @Output()
-    oncontact = new EventEmitter<Contact>()
+    contactChange = new EventEmitter<Contact>()
 
     constructor(private contactService: ContactsService) {}
 
     submit(form: NgForm) {
+        if( ! form.valid ) return
+
         this.contact = form.value
         this.contactService.update(this.contact)
         this.editMode = false
 
-        this.oncontact.emit(this.contact);
+        this.contactChange.emit(this.contact);
     }
 }

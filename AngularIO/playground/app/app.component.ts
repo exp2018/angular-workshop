@@ -3,8 +3,8 @@ import { Component } from '@angular/core'
 @Component({
     selector: 'my-app',
     template: `
-        <contact-list [selected]="selected" (onselected)="selected = $event"></contact-list>
-        <contact-details [contact]="selected" (oncontact)="selected=$event"></contact-details>
+        <contact-list [(selected)]="selected"></contact-list>
+        <contact-details [(contact)]="selected"></contact-details>
         <pre>{{selected | json}}</pre>
     `
 })

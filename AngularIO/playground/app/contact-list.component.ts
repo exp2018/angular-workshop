@@ -19,7 +19,7 @@ export class ContactListComponent implements OnInit {
     selected: Contact
     
     @Output()
-    onselected: EventEmitter<Contact> = new EventEmitter<Contact>()
+    selectedChange: EventEmitter<Contact> = new EventEmitter<Contact>()
 
     constructor(private contactService: ContactsService) {}
 
@@ -29,12 +29,12 @@ export class ContactListComponent implements OnInit {
 
     select(contact: Contact) {
         this.selected = contact
-        this.onselected.emit(contact)
+        this.selectedChange.emit(contact)
     }
 
     remove(contact: Contact): void {
         this.contactService.remove(contact.id)
         this.selected = null
-        this.onselected.emit(null)
+        this.selectedChange.emit(null)
     }
 }
