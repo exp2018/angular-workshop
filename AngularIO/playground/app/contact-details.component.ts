@@ -1,5 +1,5 @@
 import { ContactsService } from './contact.service';
-import { Component, Input, EventEmitter, Output } from '@angular/core'
+import { Component, Input, EventEmitter, Output, OnChanges } from '@angular/core'
 import { NgForm } from '@angular/forms'
 
 @Component({
@@ -24,7 +24,7 @@ import { NgForm } from '@angular/forms'
         </div>
     `
 })
-export class ContactDetailsComponent {
+export class ContactDetailsComponent implements OnChanges {
     editMode = false
 
     @Input()
@@ -34,6 +34,11 @@ export class ContactDetailsComponent {
     contactChange = new EventEmitter<Contact>()
 
     constructor(private contactService: ContactsService) {}
+
+    ngOnChanges(changes) {
+        if(changes && changes.contact && changes.contact.currentValue!==changes.contact.previousValue)
+            this.editMode = ( this.contact && this.contact.id === null )
+    }
 
     submit(form: NgForm) {
         if( ! form.valid ) return
