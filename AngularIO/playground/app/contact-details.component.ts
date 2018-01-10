@@ -1,20 +1,38 @@
 import { ContactsService } from './contact.service';
 import { Component, Input } from '@angular/core'
+import { NgForm } from '@angular/forms';
 
 @Component({
     selector: 'contact-details',
     template: `
         <div id="contactsDetailsContainer" *ngIf="contact">
-            <label>First Name: </label><b>{{contact.firstName}}</b><br/>
-            <label>Last Name: </label><b>{{contact.lastName}}</b><br/>
-            <label>email: </label><b>{{contact.email}}</b><br/>
-            <label></label><a href="#" class="text-danger" onclick="ctrl.edit(event, 1)"><span class="glyphicon glyphicon-edit"></span>Edit</a><br/>
+            <span *ngIf="!editMode">
+                <label>First Name: </label><b>{{contact.firstName}}</b><br/>
+                <label>Last Name: </label><b>{{contact.lastName}}</b><br/>
+                <label>email: </label><b>{{contact.email}}</b><br/>
+                <label></label><a href="#" class="text-danger" (click)="editMode=true"><span class="glyphicon glyphicon-edit"></span>Edit</a><br/>
+            </span>
+            <form *ngIf="editMode" name="editContactForm" #form="ngForm" (ngSubmit)="submit(form)">
+					<input name="id" type="hidden" [ngModel]="contact.id">
+					<label>First Name: </label><input name="firstName" [ngModel]="contact.firstName"><br/>
+					<label>Last Name: </label><input name="lastName" [ngModel]="contact.lastName"><br/>
+					<label>email: </label><input name="email" [ngModel]="contact.email"><br/>
+					<label></label><input type="submit" class="btn btn-danger" [value]="( !contact.id ? 'Add' : 'Save' )"/>
+					<a href="#" class="text-danger" onclick="ctrl.cancelEdit(event)">Cancel</a>
+			</form>
         </div>
     `
 })
 export class ContactDetailsComponent {
+    editMode = false
+
     @Input()
     contact: Contact
 
     constructor(private contactService: ContactsService) {}
+
+    submit(form: NgForm) {
+        console.log(form.value)
+        alert('Submitted');
+    }
 }

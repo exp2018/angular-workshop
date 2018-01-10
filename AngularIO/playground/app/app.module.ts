@@ -1,4 +1,5 @@
-import { ContactDetailsComponent } from './contact-details.component';
+import { FormsModule }              from '@angular/forms';
+import { ContactDetailsComponent }  from './contact-details.component';
 import { NgModule }                 from '@angular/core'
 import { BrowserModule }            from '@angular/platform-browser'
 import { AppComponent }             from './app.component'
@@ -6,7 +7,7 @@ import { ContactsService }          from './contact.service'
 import { ContactListComponent }     from './contact-list.component';
 
 @NgModule({
-  imports:      [ BrowserModule ],
+  imports:      [ BrowserModule, FormsModule ],
   declarations: [ AppComponent, ContactDetailsComponent, ContactListComponent ],
   bootstrap:    [ AppComponent ],
   providers:    [ContactsService]
