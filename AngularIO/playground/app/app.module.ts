@@ -11,13 +11,13 @@ import { EmailValidator }           from './email-validator.directive';
 import { AboutComponent }           from './about/about.component'
 import { ContactsComponent }        from './contacts/contacts.component';
 import { FailComponent }            from './fail/fail.component';
-
+import { DialogService }            from './dialog.service';
 
 
 @NgModule({
   imports:      [ BrowserModule, FormsModule, HttpModule, AppRoutingModule ],
   declarations: [ AppComponent, ContactsComponent, ContactDetailsComponent, ContactListComponent, EmailValidator, AboutComponent, FailComponent ],
   bootstrap:    [ AppComponent ],
-  providers:    [ContactsService]
+  providers:    [ ContactsService, DialogService ]
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
 import { ContactsService } from './contact.service';
-import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core'
-import { ActivatedRoute, Params } from '@angular/router'
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute, Router, Params } from '@angular/router'
 import 'rxjs/add/operator/map'
 
 @Component({
@@ -17,15 +17,12 @@ import 'rxjs/add/operator/map'
 export class ContactListComponent implements OnInit {
     contacts: Contacts
 
-    @Input()
     selectedId: number
-    
-    @Output()
-    selectedIdChange= new EventEmitter<number>()
 
     constructor( 
         private contactService: ContactsService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private router: Router 
     ) {}
 
     ngOnInit() {
@@ -41,18 +38,12 @@ export class ContactListComponent implements OnInit {
                 .route
                 .params
                 .map( (params: Params ) => +params['id'] )
-                .subscribe( contactId => { 
-                    this.selectedId = contactId
-                    setTimeout(
-                        () => this.selectedIdChange.emit(contactId)
-                        , 1
-                    )
-                } )
+                .subscribe( contactId => this.selectedId = contactId )
     }
 
     remove(contact: Contact): void {
         this.contactService.remove(contact.id)
         this.selectedId = 0
-        this.selectedIdChange.emit(0)
+        this.router.navigate('/contacts')
     }
 }

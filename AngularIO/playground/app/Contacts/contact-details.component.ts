@@ -1,6 +1,8 @@
 import { ContactsService } from './contact.service';
-import { Component, Input, EventEmitter, Output, OnChanges } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { NgForm } from '@angular/forms'
+import { ActivatedRoute, Params } from '@angular/router'
+import 'rxjs/add/operator/map'
 
 @Component({
     selector: 'contact-details',
@@ -10,7 +12,7 @@ import { NgForm } from '@angular/forms'
                 <label>First Name: </label><b>{{contact.firstName}}</b><br/>
                 <label>Last Name: </label><b>{{contact.lastName}}</b><br/>
                 <label>email: </label><b>{{contact.email}}</b><br/>
-                <label></label><a href="#" class="text-danger" (click)="editMode=true"><span class="glyphicon glyphicon-edit"></span>Edit</a><br/>
+                <label></label><a href="#" class="text-danger" (click)="editMode=true; false"><span class="glyphicon glyphicon-edit"></span>Edit</a><br/>
             </span>
             <form *ngIf="editMode" name="editContactForm" #form="ngForm" (ngSubmit)="submit(form)">
                     <input name="id" type="hidden" [ngModel]="contact.id">
@@ -34,29 +36,30 @@ import { NgForm } from '@angular/forms'
         </div>
     `
 })
-export class ContactDetailsComponent implements OnChanges {
+export class ContactDetailsComponent implements OnInit {
     editMode = false
 
     private contact: Contact
 
-    @Input()
-    contactId: number
+    constructor(
+        private contactService: ContactsService,
+        private route: ActivatedRoute
+    ) {}
 
-    @Output()
-    contactIdChange = new EventEmitter<number>()
-
-    constructor(private contactService: ContactsService) {}
-
-    ngOnChanges(changes) {
-        if(changes && changes.contactId && changes.contactId.currentValue!==changes.contactId.previousValue) {
-            this.editMode = ( this.contactId && this.contactId === -1 )
+    ngOnInit() {
+        this
+                .route
+                .params
+                .map( (params: Params ) => +params['id'] )
+                .subscribe( contactId => {
+                    this.editMode = ( contactId === -1 )
             
-            if ( ! changes.contactId.currentValue ) {
-                this.contact = null
-            } else {
-                this.contact = this.contactService.getById(changes.contactId.currentValue)
-            }
-        }
+                    if ( ! contactId ) {
+                        this.contact = null
+                    } else {
+                        this.contact = this.contactService.getById(contactId)
+                    }
+                } )
     }
 
     submit(form: NgForm) {
@@ -65,7 +68,5 @@ export class ContactDetailsComponent implements OnChanges {
         this.contact = form.value
         this.contactService.update(this.contact)
         this.editMode = false
-
-        this.contactIdChange.emit(this.contact.id);
     }
 }
