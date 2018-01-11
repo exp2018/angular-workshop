@@ -155,3 +155,13 @@
 #add { margin-left: 10px; }
 
 a span.glyphicon { margin-right: 3px; }
+
+/* -- Angular forms -- */
+
+#contactsDetailsContainer input.ng-invalid:not(.ng-pristine) {
+  background: linear-gradient(to right, #c40030 , #c40030);
+  background-size: 6px 100%;
+  background-position: 100% 0;
+  background-repeat: no-repeat;
+  border-color: #c40030;
+}
