@@ -37,17 +37,26 @@ import { NgForm } from '@angular/forms'
 export class ContactDetailsComponent implements OnChanges {
     editMode = false
 
+    private contact: Contact
+
     @Input()
-    contact: Contact
+    contactId: number
 
     @Output()
-    contactChange = new EventEmitter<Contact>()
+    contactIdChange = new EventEmitter<number>()
 
     constructor(private contactService: ContactsService) {}
 
     ngOnChanges(changes) {
-        if(changes && changes.contact && changes.contact.currentValue!==changes.contact.previousValue)
-            this.editMode = ( this.contact && this.contact.id === null )
+        if(changes && changes.contactId && changes.contactId.currentValue!==changes.contactId.previousValue) {
+            this.editMode = ( this.contactId && this.contactId === -1 )
+            
+            if ( ! changes.contactId.currentValue ) {
+                this.contact = null
+            } else {
+                this.contact = this.contactService.getById(changes.contactId.currentValue)
+            }
+        }
     }
 
     submit(form: NgForm) {
@@ -57,6 +66,6 @@ export class ContactDetailsComponent implements OnChanges {
         this.contactService.update(this.contact)
         this.editMode = false
 
-        this.contactChange.emit(this.contact);
+        this.contactIdChange.emit(this.contact.id);
     }
 }

@@ -10,12 +10,13 @@ import { ContactListComponent }     from './contacts/contact-list.component';
 import { EmailValidator }           from './email-validator.directive';
 import { AboutComponent }           from './about/about.component'
 import { ContactsComponent }        from './contacts/contacts.component';
+import { FailComponent }            from './fail/fail.component';
 
 
 
 @NgModule({
   imports:      [ BrowserModule, FormsModule, HttpModule, AppRoutingModule ],
-  declarations: [ AppComponent, ContactsComponent, ContactDetailsComponent, ContactListComponent, EmailValidator, AboutComponent ],
+  declarations: [ AppComponent, ContactsComponent, ContactDetailsComponent, ContactListComponent, EmailValidator, AboutComponent, FailComponent ],
   bootstrap:    [ AppComponent ],
   providers:    [ContactsService]
 })
